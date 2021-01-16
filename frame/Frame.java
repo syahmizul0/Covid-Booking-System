@@ -3,9 +3,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Vector;
 import java.util.concurrent.Flow;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import SQLBackend.SQL;
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
@@ -38,7 +40,6 @@ public class Frame extends JFrame {
         label3 = new JLabel();
         panel2 = new JPanel();
         scrollPane2 = new JScrollPane();
-
         textPane1 = new JTextPane();
         listModel = new DefaultListModel();
         list1 = new JList(listModel);
@@ -48,14 +49,17 @@ public class Frame extends JFrame {
         datePicker = new JDatePickerImpl(datePanel);
         label6 = new JLabel();
         sql = new SQL();
-        sqlarr = new ArrayList<ArrayList>();
+        sqlarr = new Vector<Vector>();
         sqlarr = sql.SQL();
         updatebutton = new JButton("Update");
-
+        refreshbutton = new JButton("Refresh");
+        table1 = new JTable();
+        tableModel = (DefaultTableModel) table1.getModel();
 
         //======== this ========
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
+        
 
         //======== tabbedPane1 ========
         {
@@ -182,7 +186,7 @@ public class Frame extends JFrame {
                     panel1.setPreferredSize(preferredSize);
                 }
             }
-            updatebutton.setBounds(new Rectangle(new Point(panel1.getWidth()*2, panel5.getY()+200), updatebutton.getPreferredSize()));
+            updatebutton.setBounds(570,400,100,30);
             updatebutton.addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -190,7 +194,9 @@ public class Frame extends JFrame {
 
                 }
             });
+            
             panel1.add(updatebutton);
+          
             tabbedPane1.addTab("Book", panel1);
 
             //======== panel2 ========
@@ -200,20 +206,52 @@ public class Frame extends JFrame {
                 //======== scrollPane2 ========
                 {
                     //======== table1 ========
-                    {
-                        data = new String[sqlarr.size()][4];
-                        for(int i = 0;i<sqlarr.size();i++)
-                        {
-                            for(int v = 0;v<4;v++) {
-                                data[i][v] = sqlarr.get(i).get(v).toString();
-                            }
-                        }
-                        table1 = new JTable(data,table1_column);
-                        table1.setEnabled(false);
+                	{
+
+                		sqlarr = sql.SQL();
+             
+                		tableModel.setRowCount(0);
+                		for(String col : table1_column)
+                		{
+                			tableModel.addColumn(col);
+                		}
+                		
+                		for(Vector vec : sqlarr)
+                		{
+                			
+                			tableModel.addRow(vec);
+                		}
+
+                        table1.setEnabled(true);
+                        table1.setModel(tableModel);
+                        
                     }
                     scrollPane2.setViewportView(table1);
-                }
+                    refreshbutton.setBounds(570,430,100,30);
+                    refreshbutton.addActionListener(new ActionListener(){
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                        	{
+                        		sqlarr = sql.SQL();
+                                
+                        		tableModel.setRowCount(0);
+                        	
+                        		for(Vector vec : sqlarr)
+                        		{
+                        			
+                        			tableModel.addRow(vec);
+                        		}
 
+                                table1.setEnabled(true);
+                                table1.setModel(tableModel);
+                            }
+                        	  
+
+                        }
+                    });
+                }
+                
+                panel1.add(refreshbutton);
                 panel2.add(scrollPane2);
                 scrollPane2.setBounds(0, 0, 760, 470);
 
@@ -235,13 +273,13 @@ public class Frame extends JFrame {
             tabbedPane1.addTab("View Available Dates", panel2);
         }
         contentPane.add(tabbedPane1, BorderLayout.CENTER);
-
         setTitle("Covid Booking System");
         pack();
         setVisible(true);
         setResizable(false);
 
         setLocationRelativeTo(getOwner());
+        
     }
 
     private JTabbedPane tabbedPane1;
@@ -275,8 +313,9 @@ public class Frame extends JFrame {
     private String[] table1_column = {"ID","First Name","Last Name","IC Number"};
     private String[][] data ;
     private SQL sql ;
-    private ArrayList<ArrayList> sqlarr;
+    private Vector<Vector> sqlarr;
     private JButton updatebutton;
-
+    private JButton refreshbutton;
+    private DefaultTableModel tableModel;
 
 }

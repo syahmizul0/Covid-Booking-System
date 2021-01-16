@@ -1,12 +1,11 @@
 package SQLBackend;
-import java.util.ArrayList;
 import java.sql.*;
-
+import java.util.*;  
 public class SQL {
-    private ArrayList<ArrayList> array = new ArrayList<ArrayList>();
-    private ArrayList<String> data;
+    private Vector<Vector> array = new Vector<Vector>();
+    private Vector<String> data;
 
-    public ArrayList<ArrayList> SQL()
+    public Vector<Vector> SQL()
     {
         String connectionUrl =
                 "jdbc:sqlserver://dbserverbookzoo.database.windows.net:1433;"
@@ -24,7 +23,7 @@ public class SQL {
             String selectSql = "SELECT * FROM userinfo";
             resultSet = statement.executeQuery(selectSql);
             while (resultSet.next()) {
-                data = new ArrayList<String>();
+                data = new Vector<String>();
                 data.add(resultSet.getString(1));
                 data.add(resultSet.getString(2));
                 data.add(resultSet.getString(3));
