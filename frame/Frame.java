@@ -237,7 +237,6 @@ public class Frame extends JFrame {
                   
                         		tableModel.setRowCount(0);
 
-                        		
                         		for(Vector vec : sqlarr)
                         		{
                         			
