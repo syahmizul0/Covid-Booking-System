@@ -207,9 +207,9 @@ public class Frame extends JFrame {
                 {
                     //======== table1 ========
                 	{
-
+                		sql = new SQL();
                 		sqlarr = sql.SQL();
-             
+          
                 		tableModel.setRowCount(0);
                 		for(String col : table1_column)
                 		{
@@ -232,10 +232,12 @@ public class Frame extends JFrame {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                         	{
+                        		sql = new SQL();
                         		sqlarr = sql.SQL();
-                                
+                  
                         		tableModel.setRowCount(0);
-                        	
+
+                        		
                         		for(Vector vec : sqlarr)
                         		{
                         			
